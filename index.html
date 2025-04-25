@@ -1,0 +1,121 @@
+
+<!DOCTYPE html><html>
+<head>
+  <title>Ecostyle – Sustainable Fashion Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      padding: 2em 1em;
+      max-width: 500px;
+      margin: auto;
+      background-color: #f6fff4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }h1, h2 {
+  font-family: 'Playfair Display', serif;
+  text-align: center;
+  color: #2e7d32;
+  letter-spacing: -0.5px;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 0.2em;
+}
+
+input, select, button {
+  display: block;
+  width: 100%;
+  margin: 0.5em 0;
+  padding: 0.7em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+#item-list li {
+  background: #e5f7e0;
+  margin: 0.5em 0;
+  padding: 0.7em;
+  border-left: 4px solid #2e7d32;
+  list-style: none;
+}
+
+  </style>
+</head>
+<body>
+  <h1>Ecostyle</h1>
+  <p style="text-align:center; font-style: italic;">Track your style, respect the planet.</p>  <form id="tracker-form">
+    <input type="text" id="item" placeholder="Clothing Item" required />
+    <input type="text" id="brand" placeholder="Brand" required />
+    <input type="text" id="material" placeholder="Material" required /><select id="rating" required>
+  <option value="" disabled selected>Select Sustainability</option>
+  <option value="5">Very Sustainable</option>
+  <option value="4">Sustainable</option>
+  <option value="3">Neutral</option>
+  <option value="2">Low Impact</option>
+  <option value="1">Fast Fashion</option>
+</select>
+
+<input type="date" id="date" required />
+<button type="submit">Add Item</button>
+
+  </form>  <div id="log">
+    <h2>Your Fashion Log</h2>
+    <ul id="item-list"></ul>
+  </div>  <script>
+    const form = document.getElementById('tracker-form');
+    const list = document.getElementById('item-list');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const item = document.getElementById('item').value.trim();
+      const brand = document.getElementById('brand').value.trim();
+      const material = document.getElementById('material').value.trim();
+      const rating = document.getElementById('rating').value;
+      const date = document.getElementById('date').value;
+
+      if (!item || !brand || !material || !rating || !date) return;
+
+      const entry = { item, brand, material, rating, date };
+
+      saveEntry(entry);
+      displayEntries();
+      form.reset();
+    });
+
+    function saveEntry(entry) {
+      let entries = JSON.parse(localStorage.getItem('fashionLog')) || [];
+      entries.push(entry);
+      localStorage.setItem('fashionLog', JSON.stringify(entries));
+    }
+
+    function displayEntries() {
+      const entries = JSON.parse(localStorage.getItem('fashionLog')) || [];
+      list.innerHTML = '';
+      entries.forEach((e, i) => {
+        const li = document.createElement('li');
+        li.textContent = `${e.date} – ${e.item} by ${e.brand} [${e.material}] – Sustainability: ${e.rating}/5`;
+        list.appendChild(li);
+      });
+    }
+
+    displayEntries();
+  </script>
+  <footer style="margin-top: auto; text-align: center; padding: 2em 0; font-family: 'Playfair Display', serif; color: #2e7d32; font-size: 1.2em;">
+    Track your style, Respect the planet
+  </footer>
+  </body>
+</html>
